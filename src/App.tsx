@@ -1,25 +1,32 @@
 import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import { ThemeProvider } from '@chakra-ui/core';
+import Header from 'components/Header';
+import { QueryCache, ReactQueryCacheProvider } from 'react-query';
+import { appTheme } from './theme';
+import { Route } from 'react-router-dom';
+import { QueryParamProvider } from 'use-query-params';
+import RouteContainer from 'routes/RouteContainer';
+
+const queryCache = new QueryCache({
+  defaultConfig: {
+    queries: {
+      retry: 0,
+      retryDelay: () => 0,
+      refetchOnWindowFocus: false,
+    },
+  },
+});
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <ReactQueryCacheProvider queryCache={queryCache}>
+      <ThemeProvider theme={appTheme}>
+        <QueryParamProvider ReactRouterRoute={Route}>
+          <Header />
+          <RouteContainer />
+        </QueryParamProvider>
+      </ThemeProvider>
+    </ReactQueryCacheProvider>
   );
 }
 
