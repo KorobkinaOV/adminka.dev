@@ -3,15 +3,25 @@ import { Flex } from '@chakra-ui/core';
 import { Switch, withRouter } from 'react-router';
 import { Route, Redirect, RouteProps } from 'react-router-dom';
 import { LoadingOverlay } from 'uikit/ReactTable/components';
+import { useCheckIsLogin } from 'hooks';
 
 const UserList = lazy(() => import('features/UserList'));
+const Login = lazy(() => import('features/Login'));
 
 const routes = [
   {
+    path: '/login',
+    component: Login,
+    exact: false,
+  },
+  {
     path: '/user-list',
-    public: true,
     component: UserList,
     exact: false,
+  },
+  {
+    path: '/',
+    exact: true,
   },
   {
     path: '*',
@@ -25,19 +35,33 @@ const routes = [
   },
 ];
 
-const PublicRoute = (props: RouteProps) => {
+const PrivateRoute = (props: RouteProps) => {
   const { ...restProps } = props;
-
-  return <Route {...restProps} />;
+  if (props.path !== '/login') {
+    return <Redirect to="/login" />;
+  } else return <Route {...restProps} />;
 };
 
 const RouteContainer = () => {
+  const { isLogin } = useCheckIsLogin();
   return (
     <Suspense fallback={<LoadingOverlay />}>
       <Switch>
-        {routes.map((route, i) => (
-          <PublicRoute key={i} path={route.path} component={route.component} />
-        ))}
+        {routes.map((route, i) =>
+          isLogin ? (
+            route.path === '/' ? (
+              <Redirect to="/user-list" key={i} />
+            ) : (
+              <Route key={i} path={route.path} component={route.component} />
+            )
+          ) : (
+            <PrivateRoute
+              key={i}
+              path={route.path}
+              component={route.component}
+            />
+          )
+        )}
       </Switch>
     </Suspense>
   );

@@ -4,9 +4,10 @@
     "plugin:react/recommended",
     "plugin:@typescript-eslint/recommended",
     "prettier/@typescript-eslint",
-    "plugin:prettier/recommended"
+    "plugin:prettier/recommended",
+    "plugin:react-hooks/recommended"
   ],
-  "plugins": ["react", "@typescript-eslint", "prettier"],
+  "plugins": ["react", "@typescript-eslint", "prettier", "react-hooks"],
   "env": {
     "browser": true,
     "jasmine": true,
@@ -14,7 +15,8 @@
   },
   "rules": {
     "prettier/prettier": "error",
-    "react-hooks/exhaustive-deps": 0,
+    "react-hooks/rules-of-hooks": "off",
+    "react-hooks/exhaustive-deps": "off",
     "react/no-array-index-key": "off",
     "react/jsx-boolean-value": "warn",
     "@typescript-eslint/ban-types": ["off"],
@@ -22,10 +24,11 @@
     "react/prop-types": ["off"],
     "react/display-name": ["off"],
     "@typescript-eslint/ban-ts-comment": "off",
-    "no-extra-boolean-cast": "off"
+    "no-extra-boolean-cast": "off",
+    "no-prototype-builtins": "off"
   },
-  "settings": {
-    "react": {
+  "settings": { 
+    "react": { 
       "pragma": "React",
       "version": "detect"
     }

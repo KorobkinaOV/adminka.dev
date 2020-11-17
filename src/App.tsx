@@ -6,6 +6,7 @@ import { appTheme } from './theme';
 import { Route } from 'react-router-dom';
 import { QueryParamProvider } from 'use-query-params';
 import RouteContainer from 'routes/RouteContainer';
+import { HeaderBtnControlProvider } from 'providers';
 
 const queryCache = new QueryCache({
   defaultConfig: {
@@ -22,8 +23,10 @@ function App() {
     <ReactQueryCacheProvider queryCache={queryCache}>
       <ThemeProvider theme={appTheme}>
         <QueryParamProvider ReactRouterRoute={Route}>
-          <Header />
-          <RouteContainer />
+          <HeaderBtnControlProvider>
+            <Header />
+            <RouteContainer />
+          </HeaderBtnControlProvider>
         </QueryParamProvider>
       </ThemeProvider>
     </ReactQueryCacheProvider>

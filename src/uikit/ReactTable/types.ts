@@ -1,3 +1,5 @@
+import { Column } from 'react-table';
+
 export type Pagination = {
   pageSize: number;
   pageNumber: number;
@@ -5,12 +7,17 @@ export type Pagination = {
   sortType?: string | null;
 };
 
-export type TablePaginatedProps = {
+export type TablePaginatedProps<D extends object> = {
   rowCount: number;
-  data: any[];
-  columns: any[];
-  onPaginationChange?: (p: Pagination) => void;
+  data: D[];
+  columns: Column<D>[];
+  onPaginationChange: (p: Pagination) => void;
   isLoading?: boolean;
   pagination: Pagination;
-  onRowClick?: (row: any) => void;
+  onRowClick?: (row: D) => void;
+};
+
+export type TableProps<D extends object> = {
+  data: D[];
+  columns: Column<D>[];
 };

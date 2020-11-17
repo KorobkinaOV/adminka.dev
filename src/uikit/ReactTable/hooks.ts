@@ -6,6 +6,7 @@ import {
   BooleanParam,
   StringParam,
 } from 'use-query-params';
+import { Pagination } from './types';
 
 export const useQueryPagination = ({
   defaults,
@@ -23,13 +24,13 @@ export const useQueryPagination = ({
       : StringParam,
   });
 
-  console.log('pagination', pagination);
-
   const resetPage = () => {
     setPagination({ pageNumber: 0 });
   };
 
-  const onPaginationChange = useCallback((p: any) => setPagination(p), []);
+  const onPaginationChange = useCallback((p: Pagination) => setPagination(p), [
+    setPagination,
+  ]);
 
   return {
     pagination,

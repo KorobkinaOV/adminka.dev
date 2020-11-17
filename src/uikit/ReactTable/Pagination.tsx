@@ -1,106 +1,100 @@
-import {
-  Flex,
-  Text,
-  NumberInput,
-  Input,
-  Icon,
-  IconButton,
-} from '@chakra-ui/core';
+import { Flex, Text, Input, IconButton } from '@chakra-ui/core';
 import React from 'react';
-import { Container, Link } from 'uikit';
+import { Link } from 'uikit';
+import { Pagination as PaginationType } from './types';
 
-const Pagination = ({
-  gotoPage,
-  canPreviousPage,
-  previousPage,
-  nextPage,
-  canNextPage,
-  pageCount,
-  pageIndex,
-  pageSize,
-  setPageSize,
-  pageOptions,
-  dataCount,
-}: {
-  gotoPage: (updater: number | ((pageIndex: number) => number)) => void;
-  canPreviousPage: boolean;
-  canNextPage: boolean;
-  pageCount: number;
+type PaginationProps = {
   nextPage: () => void;
   previousPage: () => void;
   pageIndex: number;
   pageSize: number;
   setPageSize: (pageSize: number) => void;
-  pageOptions: number[];
   dataCount: number;
-}) => (
-  <Container
-    justifyContent="space-between"
-    alignItems="center"
-    boxShadow="0 2px 5px 1px #92919147"
-    bg="white"
-    position="fixed"
-    bottom={0}
-    width="100%"
-    py={5}
-  >
-    <Flex justifyContent="space-between" width="100%" px={8}>
-      <Flex alignItems="center" color="#7a7c7f">
-        <IconButton
-          onClick={() => previousPage()}
-          icon="chevron-left"
-          aria-label="chevron-right"
-          bg="transparent"
-          isDisabled={!canPreviousPage}
-          fontSize="25px"
-          mr={3}
-        />
-        <Input
-          type="number"
-          defaultValue={pageIndex + 1}
-          onChange={(e: any) => {
-            const page = e.target.value ? Number(e.target.value) - 1 : 0;
-            gotoPage(page);
-          }}
-          mr={3}
-          style={{ width: '50px', borderColor: '#cbd3de' }}
-        />{' '}
-        из {pageOptions.length}
-        <IconButton
-          onClick={() => nextPage()}
-          icon="chevron-right"
-          aria-label="chevron-right"
-          bg="transparent"
-          isDisabled={!canNextPage}
-          fontSize="25px"
-          ml={3}
-        />
-      </Flex>
-      <Flex alignItems="center">
-        <Flex mr={12}>
-          Всего записей:{' '}
-          <Text display="inline-block" my={0} ml={3} fontWeight={600}>
-            {dataCount}
-          </Text>
+  onPaginationChange: (pagination: PaginationType) => void;
+};
+
+const Pagination = ({
+  previousPage,
+  nextPage,
+  pageIndex,
+  pageSize,
+  setPageSize,
+  dataCount,
+  onPaginationChange,
+}: PaginationProps) => {
+  const pageCount = Math.ceil(dataCount / pageSize);
+
+  return (
+    <Flex
+      justifyContent="space-between"
+      alignItems="center"
+      boxShadow="2xl"
+      bg="white"
+      position="fixed"
+      bottom={0}
+      width="100%"
+      py={3}
+    >
+      <Flex justifyContent="space-between" width="100%" px={8}>
+        <Flex alignItems="center" color="gray.500">
+          <IconButton
+            onClick={() => previousPage()}
+            icon="chevron-left"
+            aria-label="chevron-right"
+            bg="transparent"
+            isDisabled={pageIndex === 0}
+            fontSize="25px"
+            mr={3}
+          />
+          <Input
+            size="sm"
+            type="number"
+            defaultValue={pageIndex + 1}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+              const page = e.target.value ? Number(e.target.value) - 1 : 0;
+              onPaginationChange({ pageNumber: page, pageSize });
+            }}
+            mr={3}
+            w="50px !important"
+            borderColor="gray.200"
+          />{' '}
+          из {pageCount}
+          <IconButton
+            onClick={() => nextPage()}
+            icon="chevron-right"
+            aria-label="chevron-right"
+            bg="transparent"
+            isDisabled={pageIndex + 1 === pageCount}
+            fontSize="25px"
+            ml={3}
+          />
         </Flex>
-        <Flex>
-          Показывать по
-          {[10, 50, 100].map((item, index) => (
-            <Link
-              onChange={(e: any) => {
-                setPageSize(Number(e.target.value));
-              }}
-              key={`pageSize-${index}`}
-              ml={3}
-              isActive={pageSize === item}
-            >
-              {item}
-            </Link>
-          ))}
+        <Flex alignItems="center">
+          <Flex mr={12}>
+            Всего записей:{' '}
+            <Text display="inline-block" my={0} ml={3} fontWeight={600}>
+              {dataCount}
+            </Text>
+          </Flex>
+          <Flex>
+            Показывать по
+            {[10, 50, 100].map((item, index) => (
+              <Link
+                onClick={() => {
+                  setPageSize(item);
+                }}
+                key={`pageSize-${index}`}
+                ml={3}
+                isActive={pageSize === item}
+              >
+                {item}
+              </Link>
+            ))}
+          </Flex>
         </Flex>
       </Flex>
     </Flex>
-  </Container>
-);
+  );
+};
 
 export default Pagination;

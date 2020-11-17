@@ -17,3 +17,12 @@ button {
   border: none;
   cursor: pointer;
 }
+
+input {
+  width: auto !important
+}
+
+input[type="password"]
+{
+  -webkit-text-security: disc;
+}
